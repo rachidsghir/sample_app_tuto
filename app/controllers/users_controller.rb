@@ -9,6 +9,7 @@ class UsersController < ApplicationController
   def create
     @user = User.create user_params
     if @user.save
+      log_in @user
       flash[:success] = "Your subscription is successfuly saved"
       redirect_to @user
     else
@@ -18,6 +19,9 @@ class UsersController < ApplicationController
   end
 
   def show
+    if !find_user
+      redirect_to login_path
+    end
   end
 
   private
@@ -27,7 +31,7 @@ class UsersController < ApplicationController
   end
 
   def find_user
-    @user = User.find params[:id]
+    @user = current_user
   end
 
 end
